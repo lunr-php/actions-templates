@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: Copyright 2021 M2mobi B.V., Amsterdam, The Netherlands
+# SPDX-FileCopyrightText: Copyright 2022 Move Agency Group B.V., Zwolle, The Netherlands
+# SPDX-License-Identifier: CC0-1.0
+
+name: PHP Tests
+on:
+  workflow_call:
+    inputs:
+      codestyle-branch:
+        required: false
+        type: string
+        default: master
+      minimum-php-version:
+        required: false
+        type: string
+        default: '8.1'
+      allow-style-failures:
+        required: false
+        type: boolean
+        default: false
+      phpcs-whitelist:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+
+  phpcs:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.allow-style-failures }}
+    name: "PHPCS"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Codestyle checkout
+        uses: actions/checkout@v3
+        with:
+            repository: 'lunr-php/lunr-coding-standard'
+            ref: ${{ inputs.codestyle-branch }}
+
+            # Relative path under $GITHUB_WORKSPACE to place the repository
+            path: 'codestyle'
+
+      - name: Setup PHPCS
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.minimum-php-version }}
+          tools: cs2pr, phpcs
+
+      - name: Run PHPCS
+        run: |
+          phpcs -q --report=checkstyle \
+                   --standard=$GITHUB_WORKSPACE/codestyle/Lunr \
+                   ${{ inputs.phpcs-whitelist }} \
+                   src/ | cs2pr

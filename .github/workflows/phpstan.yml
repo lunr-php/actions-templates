@@ -1,0 +1,43 @@
+# SPDX-FileCopyrightText: Copyright 2021 M2mobi B.V., Amsterdam, The Netherlands
+# SPDX-FileCopyrightText: Copyright 2022 Move Agency Group B.V., Zwolle, The Netherlands
+# SPDX-License-Identifier: CC0-1.0
+
+name: PHP Tests
+on:
+  workflow_call:
+    inputs:
+      phpstan-level:
+        required: true
+        type: string
+        default: 4
+      minimum-php-version:
+        required: false
+        type: string
+        default: '8.1'
+      allow-phpstan-failures:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+
+  phpstan:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.allow-phpstan-failures }}
+    name: "PHPStan"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHPStan
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.minimum-php-version }}
+          tools: phpstan
+          extensions: uopz
+
+      - name: Install dependencies
+        run: composer update
+
+      - name: Run PHPStan
+        run: phpstan analyze src --level ${{ inputs.phpstan-level }} --configuration tests/phpstan.neon.dist --autoload-file tests/phpstan.autoload.inc.php

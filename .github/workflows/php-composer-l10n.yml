@@ -1,0 +1,72 @@
+# SPDX-FileCopyrightText: Copyright 2021 M2mobi B.V., Amsterdam, The Netherlands
+# SPDX-FileCopyrightText: Copyright 2022 Move Agency Group B.V., Zwolle, The Netherlands
+# SPDX-License-Identifier: CC0-1.0
+
+name: PHP Tests
+on:
+  workflow_call:
+    inputs:
+      phpstan-level:
+        required: true
+        type: string
+        default: 4
+      codestyle-branch:
+        required: false
+        type: string
+        default: master
+      minimum-php-version:
+        required: false
+        type: string
+        default: '8.1'
+      stable-php-versions:
+        required: true
+        type: string
+        default: '["8.1"]'
+      experimental-php-versions:
+        required: false
+        type: string
+        default: '["8.2", "8.3"]'
+      minimum-phpunit-version:
+        required: false
+        type: string
+        default: '9.5.x'
+      allow-style-failures:
+        required: false
+        type: boolean
+        default: false
+      allow-phpstan-failures:
+        required: false
+        type: boolean
+        default: false
+      phpcs-whitelist:
+        required: false
+        type: string
+        default: ''
+      php-extensions:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  phpunit:
+    uses: lunr-php/actions-templates/.github/workflows/phpunit-l10n.yml@master
+    with:
+      minimum-phpunit-version: ${{ inputs.minimum-phpunit-version }}
+      php-extensions: ${{ inputs.php-extensions }}
+      stable-php-versions: ${{ inputs.stable-php-versions }}
+      experimental-php-versions: ${{ inputs.experimental-php-versions }}
+
+  phpcs:
+    uses: lunr-php/actions-templates/.github/workflows/phpcs-lunr.yml@master
+    with:
+      codestyle-branch: ${{ inputs.codestyle-branch }}
+      allow-style-failures: ${{ inputs.allow-style-failures }}
+      phpcs-whitelist: ${{ inputs.phpcs-whitelist }}
+      minimum-php-version: ${{ inputs.minimum-php-version }}
+
+  phpstan:
+    uses: lunr-php/actions-templates/.github/workflows/phpstan.yml@master
+    with:
+      phpstan-level: ${{ inputs.phpstan-level }}
+      allow-phpstan-failures: ${{ inputs.allow-phpstan-failures }}
+      minimum-php-version: ${{ inputs.minimum-php-version }}

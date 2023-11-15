@@ -1,0 +1,81 @@
+# SPDX-FileCopyrightText: Copyright 2021 M2mobi B.V., Amsterdam, The Netherlands
+# SPDX-FileCopyrightText: Copyright 2022 Move Agency Group B.V., Zwolle, The Netherlands
+# SPDX-License-Identifier: CC0-1.0
+
+name: PHPUnit
+on:
+  workflow_call:
+    inputs:
+      stable-php-versions:
+        required: true
+        type: string
+        default: '["8.1"]'
+      experimental-php-versions:
+        required: false
+        type: string
+        default: '["8.2", "8.3"]'
+      minimum-phpunit-version:
+        required: false
+        type: string
+        default: '9.5.x'
+      php-extensions:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  generate-matrix:
+    name: Generate matrix for phpunit
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set matrix for build
+        id: set-matrix
+        run: |
+          JSON=$(jq --null-input --arg stable '${{ inputs.stable-php-versions }}' --arg experimental '${{ inputs.experimental-php-versions }}' '{"php-versions": $stable | fromjson, "experimental": [ false ], "include":[ $experimental | fromjson | .[] as $version | {"php-versions": $version, "experimental": true} ]} | tostring')
+          echo "matrix=$JSON" >> $GITHUB_OUTPUT
+
+  phpunit:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    name: "PHP-${{ matrix.php-versions }}: PHPUnit"
+    needs: generate-matrix
+    strategy:
+      matrix: ${{ fromJson(fromJson(needs.generate-matrix.outputs.matrix)) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: phpunit:${{ inputs.minimum-phpunit-version }}
+          extensions: ${{ inputs.php-extensions }}
+
+      - name: Setup problem matchers for PHP
+        run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+      - name: Install dependencies
+        run: composer update
+
+      - name: Install GNU gettext
+        run: sudo apt install gettext language-pack-de language-pack-nl
+
+      - name: Generate German locale
+        run: sudo locale-gen de_DE
+
+      - name: Generate Dutch locale
+        run: sudo locale-gen nl_NL
+
+      - name: Generate localization files
+        run: support/gen_l10n.sh
+
+      - name: Run PHPunit
+        run: phpunit --configuration tests/phpunit.xml --coverage-clover=coverage.xml
+
+      - name: Collect code coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml

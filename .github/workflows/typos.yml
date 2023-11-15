@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: Copyright 2023 Move Agency Group B.V., Zwolle, The Netherlands
+# SPDX-License-Identifier: CC0-1.0
+
+name: Spellcheck
+on:
+  workflow_call:
+    inputs:
+      config:
+        required: false
+        type: string
+        default: 'typos.toml'
+
+jobs:
+  typos:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    name: "Spellcheck (typos)"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: typos-action
+        uses: crate-ci/typos@master
+        with:
+          config: ${{ inputs.config }}
