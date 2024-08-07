@@ -39,8 +39,15 @@ jobs:
             repository: 'lunr-php/lunr-coding-standard'
             ref: ${{ inputs.codestyle-branch }}
 
+            # Clone submodules recursively. `true` should be enough, but better be safe
+            submodules: 'recursive'
+
             # Relative path under $GITHUB_WORKSPACE to place the repository
             path: 'codestyle'
+
+      - name: Install dependencies
+        working-directory: 'codestyle'
+        run: composer install
 
       - name: Setup PHPCS
         uses: shivammathur/setup-php@v2
@@ -50,7 +57,15 @@ jobs:
 
       - name: Run PHPCS
         run: |
-          phpcs -q --report=checkstyle \
-                   --standard=$GITHUB_WORKSPACE/codestyle/Lunr \
-                   ${{ inputs.phpcs-whitelist }} \
-                   src/ | cs2pr
+          phpcs --report-full \
+                --report-checkstyle=checkstyle.xml \
+                --runtime-set installed_paths $GITHUB_WORKSPACE/codestyle/third-party/slevomat/ \
+                --bootstrap=$GITHUB_WORKSPACE/codestyle/bootstrap.php \
+                --standard=$GITHUB_WORKSPACE/codestyle/Lunr \
+                ${{ inputs.phpcs-whitelist }} \
+                src/
+
+      - name: Convert checkstyle output to github style
+        if: always()
+        run: cat ./checkstyle.xml | cs2pr
+
