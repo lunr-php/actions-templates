@@ -35,6 +35,8 @@ jobs:
           php-version: ${{ inputs.minimum-php-version }}
           tools: phpstan
           extensions: uopz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
         run: composer update
