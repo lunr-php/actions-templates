@@ -18,10 +18,6 @@ on:
         required: false
         type: boolean
         default: false
-      phpcs-whitelist:
-        required: false
-        type: string
-        default: ''
 
 jobs:
 
@@ -32,6 +28,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Just
+        uses: extractions/setup-just@v3
+
+      - name: Justfiles checkout
+        uses: actions/checkout@v4
+        with:
+            repository: 'lunr-php/justfiles'
+            ref: master
+
+            # Relative path under $GITHUB_WORKSPACE to place the repository
+            path: 'lunr-justfiles'
 
       - name: Codestyle checkout
         uses: actions/checkout@v4
@@ -49,23 +57,18 @@ jobs:
         working-directory: 'codestyle'
         run: composer install
 
-      - name: Setup PHPCS
+      - name: Set up PHPCS
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.minimum-php-version }}
           tools: cs2pr, phpcs
 
       - name: Run PHPCS
-        run: |
-          phpcs --report-full \
-                --report-checkstyle=checkstyle.xml \
-                --runtime-set installed_paths $GITHUB_WORKSPACE/codestyle/third-party/slevomat/ \
-                --bootstrap=$GITHUB_WORKSPACE/codestyle/bootstrap.php \
-                --standard=$GITHUB_WORKSPACE/codestyle/Lunr \
-                ${{ inputs.phpcs-whitelist }} \
-                src/
+        run: just phpcs
+        env:
+          LUNR_JUSTFILES: "${{ github.workspace }}/lunr-justfiles"
+          LUNR_CODING_STANDARD: "${{ github.workspace }}/codestyle/Lunr"
 
       - name: Convert checkstyle output to github style
         if: always()
-        run: cat ./checkstyle.xml | cs2pr
-
+        run: cat ./build/logs/checkstyle.xml | cs2pr

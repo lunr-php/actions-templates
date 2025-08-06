@@ -47,7 +47,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Set up Just
+        uses: extractions/setup-just@v3
+
+      - name: Justfiles checkout
+        uses: actions/checkout@v4
+        with:
+            repository: 'lunr-php/justfiles'
+            ref: master
+
+            # Relative path under $GITHUB_WORKSPACE to place the repository
+            path: 'lunr-justfiles'
+
+      - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
@@ -56,16 +68,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup problem matchers for PHP
+      - name: Set up problem matchers for PHP
         run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
 
       - name: Install dependencies
         run: composer update
 
       - name: Run PHPunit
-        run: phpunit --configuration tests/phpunit.xml --coverage-clover=coverage.xml
+        run: just phpunit
+        env:
+          LUNR_JUSTFILES: "${{ github.workspace }}/lunr-justfiles"
 
       - name: Collect code coverage
         uses: codecov/codecov-action@v4
         with:
-          files: ./coverage.xml
+          files: ./build/logs/clover.xml
