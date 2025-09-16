@@ -61,7 +61,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ inputs.minimum-php-version }}
-          tools: cs2pr, phpcs
+          tools: cs2pr, phpcs:3.x
 
       - name: Run PHPCS
         run: just phpcs
