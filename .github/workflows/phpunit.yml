@@ -60,7 +60,7 @@ jobs:
             path: 'lunr-justfiles'
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@8f8196743c19b9fcb7b11d926cfab463116c3ae9 # v2.35.5+4
+        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2.35.5+5
         with:
           php-version: ${{ matrix.php-versions }}
           tools: phpunit:${{ inputs.minimum-phpunit-version }}
