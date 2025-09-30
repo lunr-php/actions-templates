@@ -9,11 +9,11 @@ on:
       stable-php-versions:
         required: true
         type: string
-        default: '["8.1"]'
+        default: '["8.3"]'
       experimental-php-versions:
         required: false
         type: string
-        default: '["8.2", "8.3"]'
+        default: '["8.4", "8.5"]'
       minimum-phpunit-version:
         required: false
         type: string
