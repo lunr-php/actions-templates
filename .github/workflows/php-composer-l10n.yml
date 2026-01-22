@@ -62,9 +62,11 @@ jobs:
       codestyle-branch: ${{ inputs.codestyle-branch }}
       allow-style-failures: ${{ inputs.allow-style-failures }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
+      php-extensions: ${{ inputs.php-extensions }}
 
   phpstan:
     uses: lunr-php/actions-templates/.github/workflows/phpstan.yml@master
     with:
       allow-phpstan-failures: ${{ inputs.allow-phpstan-failures }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
+      php-extensions: ${{ inputs.php-extensions }}

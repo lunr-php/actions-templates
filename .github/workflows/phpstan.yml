@@ -14,6 +14,10 @@ on:
         required: false
         type: boolean
         default: false
+      php-extensions:
+        required: false
+        type: string
+        default: ''
 
 jobs:
 
@@ -42,7 +46,7 @@ jobs:
         with:
           php-version: ${{ inputs.minimum-php-version }}
           tools: phpstan
-          extensions: uopz
+          extensions: ${{ inputs.php-extensions }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
