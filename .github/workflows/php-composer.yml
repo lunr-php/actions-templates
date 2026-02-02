@@ -22,10 +22,6 @@ on:
         required: false
         type: string
         default: '["8.4", "8.5"]'
-      allow-style-failures:
-        required: false
-        type: boolean
-        default: false
       allow-phpstan-failures:
         required: false
         type: boolean
@@ -51,7 +47,6 @@ jobs:
     uses: lunr-php/actions-templates/.github/workflows/phpcs.yml@master
     with:
       coding-standard: ${{ inputs.coding-standard }}
-      allow-style-failures: ${{ inputs.allow-style-failures }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}
 
