@@ -6,10 +6,6 @@ name: PHP Tests
 on:
   workflow_call:
     inputs:
-      phpstan-level:
-        required: false
-        type: string
-        default: '4'
       coding-standard:
         required: false
         type: string
