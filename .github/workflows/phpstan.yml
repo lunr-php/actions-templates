@@ -10,10 +10,6 @@ on:
         required: false
         type: string
         default: '8.3'
-      allow-phpstan-failures:
-        required: false
-        type: boolean
-        default: false
       php-extensions:
         required: false
         type: string
@@ -23,7 +19,7 @@ jobs:
 
   phpstan:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ inputs.allow-phpstan-failures }}
+    continue-on-error: false
     name: "PHPStan"
     steps:
       - name: Checkout

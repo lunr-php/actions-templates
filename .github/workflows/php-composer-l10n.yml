@@ -22,10 +22,6 @@ on:
         required: false
         type: string
         default: '["8.4", "8.5"]'
-      allow-phpstan-failures:
-        required: false
-        type: boolean
-        default: false
       phpcs-whitelist:
         required: false
         type: string
@@ -53,6 +49,5 @@ jobs:
   phpstan:
     uses: lunr-php/actions-templates/.github/workflows/phpstan.yml@master
     with:
-      allow-phpstan-failures: ${{ inputs.allow-phpstan-failures }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}
