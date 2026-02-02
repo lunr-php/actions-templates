@@ -6,10 +6,10 @@ name: PHP Tests
 on:
   workflow_call:
     inputs:
-      codestyle-branch:
+      coding-standard:
         required: false
         type: string
-        default: master
+        default: 'Lunr'
       minimum-php-version:
         required: false
         type: string
@@ -45,34 +45,20 @@ jobs:
             # Relative path under $GITHUB_WORKSPACE to place the repository
             path: 'lunr-justfiles'
 
-      - name: Codestyle checkout
-        uses: actions/checkout@v4
-        with:
-            repository: 'lunr-php/lunr-coding-standard'
-            ref: ${{ inputs.codestyle-branch }}
-
-            # Clone submodules recursively. `true` should be enough, but better be safe
-            submodules: 'recursive'
-
-            # Relative path under $GITHUB_WORKSPACE to place the repository
-            path: 'codestyle'
-
-      - name: Install dependencies
-        working-directory: 'codestyle'
-        run: composer install
-
       - name: Set up PHPCS
         uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2.35.5+5
         with:
           php-version: ${{ inputs.minimum-php-version }}
           extensions: ${{ inputs.php-extensions }}
-          tools: cs2pr, phpcs:3.x
+          tools: cs2pr
+
+      - name: Install dependencies
+        run: composer update
 
       - name: Run PHPCS
         run: just phpcs
         env:
           LUNR_JUSTFILES: "${{ github.workspace }}/lunr-justfiles"
-          LUNR_CODING_STANDARD: "${{ github.workspace }}/codestyle/Lunr"
 
       - name: Convert checkstyle output to github style
         if: always()

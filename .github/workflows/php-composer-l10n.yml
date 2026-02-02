@@ -10,10 +10,10 @@ on:
         required: false
         type: string
         default: '4'
-      codestyle-branch:
+      coding-standard:
         required: false
         type: string
-        default: master
+        default: 'Lunr'
       minimum-php-version:
         required: false
         type: string
@@ -57,9 +57,9 @@ jobs:
       experimental-php-versions: ${{ inputs.experimental-php-versions }}
 
   phpcs:
-    uses: lunr-php/actions-templates/.github/workflows/phpcs-lunr.yml@master
+    uses: lunr-php/actions-templates/.github/workflows/phpcs.yml@master
     with:
-      codestyle-branch: ${{ inputs.codestyle-branch }}
+      coding-standard: ${{ inputs.coding-standard }}
       allow-style-failures: ${{ inputs.allow-style-failures }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}
