@@ -33,21 +33,21 @@ on:
 
 jobs:
   phpunit:
-    uses: lunr-php/actions-templates/.github/workflows/phpunit.yml@master
+    uses: ./.github/workflows/phpunit.yml
     with:
       php-extensions: ${{ inputs.php-extensions }}
       stable-php-versions: ${{ inputs.stable-php-versions }}
       experimental-php-versions: ${{ inputs.experimental-php-versions }}
 
   phpcs:
-    uses: lunr-php/actions-templates/.github/workflows/phpcs.yml@master
+    uses: ./.github/workflows/phpcs.yml
     with:
       coding-standard: ${{ inputs.coding-standard }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}
 
   phpstan:
-    uses: lunr-php/actions-templates/.github/workflows/phpstan.yml@master
+    uses: ./.github/workflows/phpstan.yml
     with:
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}
