@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v4
         with:
             repository: 'lunr-php/justfiles'
-            ref: master
+            ref: ff026fbf794c510095468c8631fa684d9d8fd6cf
 
             # Relative path under $GITHUB_WORKSPACE to place the repository
             path: 'lunr-justfiles'
