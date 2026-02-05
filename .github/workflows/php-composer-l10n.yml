@@ -49,7 +49,7 @@ on:
 
 jobs:
   phpunit:
-    uses: lunr-php/actions-templates/.github/workflows/phpunit-l10n.yml@master
+    uses: ./.github/workflows/phpunit-l10n.yml
     with:
       minimum-phpunit-version: ${{ inputs.minimum-phpunit-version }}
       php-extensions: ${{ inputs.php-extensions }}
@@ -57,7 +57,7 @@ jobs:
       experimental-php-versions: ${{ inputs.experimental-php-versions }}
 
   phpcs:
-    uses: lunr-php/actions-templates/.github/workflows/phpcs-lunr.yml@master
+    uses: ./.github/workflows/phpcs-lunr.yml
     with:
       codestyle-branch: ${{ inputs.codestyle-branch }}
       allow-style-failures: ${{ inputs.allow-style-failures }}
@@ -65,7 +65,7 @@ jobs:
       php-extensions: ${{ inputs.php-extensions }}
 
   phpstan:
-    uses: lunr-php/actions-templates/.github/workflows/phpstan.yml@master
+    uses: ./.github/workflows/phpstan.yml
     with:
       allow-phpstan-failures: ${{ inputs.allow-phpstan-failures }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
