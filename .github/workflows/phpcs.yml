@@ -32,15 +32,6 @@ jobs:
       - name: Set up Just
         uses: extractions/setup-just@v3
 
-      - name: Justfiles checkout
-        uses: actions/checkout@v4
-        with:
-            repository: 'lunr-php/justfiles'
-            ref: ff026fbf794c510095468c8631fa684d9d8fd6cf
-
-            # Relative path under $GITHUB_WORKSPACE to place the repository
-            path: 'lunr-justfiles'
-
       - name: Set up PHPCS
         uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f # v2.35.5+5
         with:
