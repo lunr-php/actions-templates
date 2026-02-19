@@ -31,9 +31,15 @@ on:
         type: string
         default: ''
 
+    secrets:
+      COMPOSER_AUTH:
+        required: false
+
 jobs:
   phpunit:
     uses: ./.github/workflows/phpunit.yml
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
     with:
       php-extensions: ${{ inputs.php-extensions }}
       stable-php-versions: ${{ inputs.stable-php-versions }}
@@ -41,6 +47,8 @@ jobs:
 
   phpcs:
     uses: ./.github/workflows/phpcs.yml
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
     with:
       coding-standard: ${{ inputs.coding-standard }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
@@ -48,6 +56,8 @@ jobs:
 
   phpstan:
     uses: ./.github/workflows/phpstan.yml
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
     with:
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}

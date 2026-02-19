@@ -19,6 +19,10 @@ on:
         type: string
         default: ''
 
+    secrets:
+      COMPOSER_AUTH:
+        required: false
+
 jobs:
 
   phpcs:
@@ -41,6 +45,8 @@ jobs:
 
       - name: Install dependencies
         run: composer update
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
       - name: Run PHPCS
         run: just phpcs
