@@ -34,12 +34,15 @@ on:
     secrets:
       COMPOSER_AUTH:
         required: false
+      SLACK_WEBHOOK_URL:
+        required: false
 
 jobs:
   phpunit:
     uses: ./.github/workflows/phpunit.yml
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       php-extensions: ${{ inputs.php-extensions }}
       stable-php-versions: ${{ inputs.stable-php-versions }}
@@ -49,6 +52,7 @@ jobs:
     uses: ./.github/workflows/phpcs.yml
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       coding-standard: ${{ inputs.coding-standard }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
@@ -58,6 +62,7 @@ jobs:
     uses: ./.github/workflows/phpstan.yml
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}
