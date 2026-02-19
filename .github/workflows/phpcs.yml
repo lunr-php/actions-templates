@@ -55,8 +55,6 @@ jobs:
 
       - name: Run PHPCS
         run: just phpcs
-        env:
-          LUNR_JUSTFILES: "${{ github.workspace }}/lunr-justfiles"
 
       - name: Convert checkstyle output to github style
         if: always()

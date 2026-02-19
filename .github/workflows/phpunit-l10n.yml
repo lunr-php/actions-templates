@@ -85,8 +85,6 @@ jobs:
 
       - name: Run PHPunit
         run: just phpunit
-        env:
-          LUNR_JUSTFILES: "${{ github.workspace }}/lunr-justfiles"
 
       - name: Collect code coverage
         uses: codecov/codecov-action@v4
