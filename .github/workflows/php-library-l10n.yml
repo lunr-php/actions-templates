@@ -31,16 +31,28 @@ on:
         type: string
         default: ''
 
+    secrets:
+      COMPOSER_AUTH:
+        required: false
+      SLACK_WEBHOOK_URL:
+        required: false
+
 jobs:
   phpunit:
     uses: ./.github/workflows/phpunit-l10n.yml
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       php-extensions: ${{ inputs.php-extensions }}
       stable-php-versions: ${{ inputs.stable-php-versions }}
       experimental-php-versions: ${{ inputs.experimental-php-versions }}
 
-  phpcs:
+  coding-standard:
     uses: ./.github/workflows/phpcs-lunr.yml
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       coding-standard: ${{ inputs.coding-standard }}
       minimum-php-version: ${{ inputs.minimum-php-version }}
@@ -48,6 +60,9 @@ jobs:
 
   phpstan:
     uses: ./.github/workflows/phpstan.yml
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     with:
       minimum-php-version: ${{ inputs.minimum-php-version }}
       php-extensions: ${{ inputs.php-extensions }}
