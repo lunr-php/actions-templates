@@ -86,6 +86,13 @@ jobs:
       - name: Run PHPunit
         run: just phpunit
 
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@27d65e188ec43221b20d26de30f4892fad91df2f # v2.22.0
+        with:
+          check_run: false
+          files: |
+              build/logs/junit.xml
+
       - name: Collect code coverage
         uses: codecov/codecov-action@v4
         with:
