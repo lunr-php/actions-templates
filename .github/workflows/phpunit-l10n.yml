@@ -67,7 +67,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
 
       - name: Install dependencies
-        run: composer update
+        run: composer install
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 

@@ -49,7 +49,7 @@ jobs:
           tools: cs2pr
 
       - name: Install dependencies
-        run: composer update
+        run: composer install
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 

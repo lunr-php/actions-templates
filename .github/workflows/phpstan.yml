@@ -46,7 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
-        run: composer update
+        run: composer install
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
