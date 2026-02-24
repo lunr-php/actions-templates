@@ -54,7 +54,7 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
       - name: Run PHPCS
-        run: just phpcs
+        run: composer run-script phpcs
 
       - name: Convert checkstyle output to github style
         if: always()

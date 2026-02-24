@@ -51,7 +51,7 @@ jobs:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
       - name: Run PHPStan
-        run: just phpstan
+        run: composer run-script phpstan
 
       - name: Post a message in a channel
         uses: slackapi/slack-github-action@91efab103c0de0a537f72a35f6b8cda0ee76bf0a # v2.1.1
