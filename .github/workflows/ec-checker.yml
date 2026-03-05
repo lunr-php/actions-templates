@@ -15,7 +15,7 @@ on:
       files:
         required: false
         type: string
-        default: ''
+        default: '.'
     secrets:
       SLACK_WEBHOOK_URL:
         required: false
