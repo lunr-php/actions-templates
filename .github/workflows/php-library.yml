@@ -22,10 +22,6 @@ on:
         required: false
         type: string
         default: '["8.4", "8.5"]'
-      phpcs-whitelist:
-        required: false
-        type: string
-        default: ''
       php-extensions:
         required: false
         type: string
@@ -49,7 +45,7 @@ jobs:
       experimental-php-versions: ${{ inputs.experimental-php-versions }}
 
   coding-standard:
-    uses: ./.github/workflows/phpcs.yml
+    uses: ./.github/workflows/php-coding-standard.yml
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
