@@ -126,6 +126,9 @@ jobs:
         with:
           persist-credentials: true
 
+      - name: Set up Just
+        uses: extractions/setup-just@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.35.5+5
         with:
@@ -136,7 +139,7 @@ jobs:
       - name: Install dependencies
         run: composer install
 
-      - name: Run php-cs-fixer
+      - name: Run PHP-CS-Fixer
         run: composer run-script php-cs-fixer
 
       - name: Convert checkstyle output to github style
