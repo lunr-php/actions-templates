@@ -32,6 +32,7 @@ env:
 jobs:
   detect-tools:
     runs-on: ubuntu-latest
+    name: "Check coding standard validator usage"
     outputs:
       phpcsfixer: ${{ steps.detect.outputs.phpcsfixer }}
       phpcs: ${{ steps.detect.outputs.phpcs }}
