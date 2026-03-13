@@ -15,3 +15,6 @@ rules:
       - phpunit.yml:77:30
       - phpunit.yml:97:34
       - phpunit.yml:100:24
+      - sqlfluff.yml:53:30
+      - sqlfluff.yml:72:34
+      - sqlfluff.yml:75:24
