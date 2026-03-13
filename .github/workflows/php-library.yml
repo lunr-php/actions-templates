@@ -33,9 +33,13 @@ on:
       SLACK_WEBHOOK_URL:
         required: false
 
+permissions: {}
+
 jobs:
   phpunit:
     uses: ./.github/workflows/phpunit.yml
+    permissions:
+      contents: read
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -46,6 +50,8 @@ jobs:
 
   coding-standard:
     uses: ./.github/workflows/php-coding-standard.yml
+    permissions:
+      contents: read
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -56,6 +62,8 @@ jobs:
 
   phpstan:
     uses: ./.github/workflows/phpstan.yml
+    permissions:
+      contents: read
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

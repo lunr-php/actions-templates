@@ -1,0 +1,17 @@
+rules:
+  secrets-outside-env:
+    ignore:
+      - ec-checker.yml:56:34
+      - ec-checker.yml:59:24
+      - php-coding-standard.yml:94:30
+      - php-coding-standard.yml:106:34
+      - php-coding-standard.yml:109:24
+      - php-coding-standard.yml:146:30
+      - php-coding-standard.yml:158:34
+      - php-coding-standard.yml:161:24
+      - phpstan.yml:53:30
+      - phpstan.yml:61:34
+      - phpstan.yml:64:24
+      - phpunit.yml:77:30
+      - phpunit.yml:97:34
+      - phpunit.yml:100:24
