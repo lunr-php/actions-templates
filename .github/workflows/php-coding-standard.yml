@@ -138,6 +138,8 @@ jobs:
 
       - name: Install dependencies
         run: composer install
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
 
       - name: Run PHP-CS-Fixer
         run: composer run-script php-cs-fixer
