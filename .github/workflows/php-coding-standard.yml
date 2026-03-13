@@ -42,6 +42,26 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up PHP
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # v2.36.0
+        with:
+          php-version: ${{ inputs.minimum-php-version }}
+          extensions: ${{ inputs.php-extensions }}
+
+      - name: Cache composer dependencies
+        id: composer-cache
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: |
+            ${{ github.workspace }}/vendor
+          key: ${{ runner.os }}-php-${{ inputs.minimum-php-version }}-${{ hashFiles('composer.json', 'composer.lock') }}
+
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+
       - name: Detect tool usage
         id: detect
         shell: bash
@@ -54,12 +74,12 @@ jobs:
           # Check PHP-CS-Fixer
           if [ -f ".php-cs-fixer.php" ] || [ -f ".php-cs-fixer.dist.php" ]; then
             phpcsfixer=true
-          elif grep -q '"friendsofphp/php-cs-fixer"' composer.json; then
+          elif [ -f "vendor/bin/php-cs-fixer" ]; then
             phpcsfixer=true
           fi
 
           # Check PHP_Codesniffer
-          if grep -q '"squizlabs/php_codesniffer"' composer.json; then
+          if [ -f "vendor/bin/phpcs" ]; then
             phpcs=true
           fi
 
@@ -87,6 +107,14 @@ jobs:
           php-version: ${{ inputs.minimum-php-version }}
           extensions: ${{ inputs.php-extensions }}
           tools: cs2pr
+
+      - name: Cache composer dependencies
+        id: composer-cache
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: |
+            ${{ github.workspace }}/vendor
+          key: ${{ runner.os }}-php-${{ inputs.minimum-php-version }}-${{ hashFiles('composer.json', 'composer.lock') }}
 
       - name: Install dependencies
         run: composer install
@@ -139,6 +167,14 @@ jobs:
           php-version: ${{ inputs.minimum-php-version }}
           extensions: ${{ inputs.php-extensions }}
           tools: cs2pr
+
+      - name: Cache composer dependencies
+        id: composer-cache
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: |
+            ${{ github.workspace }}/vendor
+          key: ${{ runner.os }}-php-${{ inputs.minimum-php-version }}-${{ hashFiles('composer.json', 'composer.lock') }}
 
       - name: Install dependencies
         run: composer install

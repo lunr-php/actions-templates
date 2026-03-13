@@ -3,12 +3,13 @@ rules:
     ignore:
       - ec-checker.yml:56:34
       - ec-checker.yml:59:24
-      - php-coding-standard.yml:94:30
-      - php-coding-standard.yml:106:34
-      - php-coding-standard.yml:109:24
-      - php-coding-standard.yml:146:30
-      - php-coding-standard.yml:158:34
-      - php-coding-standard.yml:161:24
+      - php-coding-standard.yml:63:30
+      - php-coding-standard.yml:122:30
+      - php-coding-standard.yml:134:34
+      - php-coding-standard.yml:137:24
+      - php-coding-standard.yml:182:30
+      - php-coding-standard.yml:194:34
+      - php-coding-standard.yml:197:24
       - phpstan.yml:53:30
       - phpstan.yml:61:34
       - phpstan.yml:64:24
