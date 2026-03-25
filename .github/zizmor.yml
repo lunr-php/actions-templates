@@ -10,12 +10,12 @@ rules:
       - php-coding-standard.yml:182:30
       - php-coding-standard.yml:194:34
       - php-coding-standard.yml:197:24
-      - phpstan.yml:53:30
-      - phpstan.yml:61:34
-      - phpstan.yml:64:24
-      - phpunit.yml:77:30
-      - phpunit.yml:97:34
-      - phpunit.yml:100:24
+      - phpstan.yml:61:30
+      - phpstan.yml:69:34
+      - phpstan.yml:72:24
+      - phpunit.yml:85:30
+      - phpunit.yml:105:34
+      - phpunit.yml:108:24
       - sqlfluff.yml:53:30
       - sqlfluff.yml:72:34
       - sqlfluff.yml:75:24

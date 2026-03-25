@@ -47,6 +47,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Cache composer dependencies
+        id: composer-cache
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: |
+            ${{ github.workspace }}/vendor
+          key: ${{ runner.os }}-php-${{ inputs.minimum-php-version }}-${{ hashFiles('composer.json', 'composer.lock') }}
+
       - name: Install dependencies
         run: composer install
         env:
