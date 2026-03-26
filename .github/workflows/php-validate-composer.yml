@@ -1,0 +1,123 @@
+# SPDX-FileCopyrightText: Copyright 2026 Framna Netherlands B.V., Zwolle, The Netherlands
+# SPDX-License-Identifier: CC0-1.0
+
+name: Validate Composer
+on:
+  workflow_call:
+    inputs:
+      minimum-php-version:
+        required: false
+        type: string
+        default: '8.3'
+      stable-php-versions:
+        required: true
+        type: string
+        default: '["8.3"]'
+      experimental-php-versions:
+        required: false
+        type: string
+        default: '["8.4", "8.5"]'
+      php-extensions:
+        required: false
+        type: string
+        default: ''
+
+    secrets:
+      COMPOSER_AUTH:
+        required: false
+      SLACK_WEBHOOK_URL:
+        required: false
+
+env:
+  SLACK_SEND_EVENTS: '["push", "schedule"]'
+
+jobs:
+  validate-composer:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    name: "Validate Composer"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
+        with:
+          php-version: ${{ inputs.minimum-php-version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate
+        run: composer validate
+
+
+  generate-matrix:
+    name: Generate matrix for composer validation
+    runs-on: ubuntu-latest
+    needs: [ validate-composer ]
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set matrix for build
+        id: set-matrix
+        run: |
+          JSON=$(jq --null-input --arg stable "$INPUTS_STABLE_PHP_VERSIONS" --arg experimental "$INPUTS_EXPERIMENTAL_PHP_VERSIONS" '{"php-versions": $stable | fromjson, "experimental": [ false ], "include":[ $experimental | fromjson | .[] as $version | {"php-versions": $version, "experimental": true} ]} | tostring')
+          echo "matrix=$JSON" >> $GITHUB_OUTPUT
+        env:
+          INPUTS_STABLE_PHP_VERSIONS: ${{ inputs.stable-php-versions }}
+          INPUTS_EXPERIMENTAL_PHP_VERSIONS: ${{ inputs.experimental-php-versions }}
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
+    name: "PHP-${{ matrix.php-versions }}: Check dependencies"
+    needs: [ generate-matrix ]
+    strategy:
+      matrix: ${{ fromJson(fromJson(needs.generate-matrix.outputs.matrix)) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: ${{ inputs.php-extensions }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up problem matchers for PHP
+        run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+      - name: Cache composer dependencies
+        id: composer-cache
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: |
+            ${{ github.workspace }}/vendor
+          key: ${{ runner.os }}-php-${{ matrix.php-versions }}-${{ hashFiles('composer.json', 'composer.lock') }}
+
+      - name: Install dependencies
+        run: composer install
+        env:
+          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+
+      - name: Post a message in a channel
+        uses: slackapi/slack-github-action@af78098f536edbc4de71162a307590698245be95 # v3.0.1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: ${{ failure() && !matrix.experimental && contains(fromJSON(env.SLACK_SEND_EVENTS), github.event_name) && env.SLACK_WEBHOOK_URL != '' }}
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "*${{ github.repository }} (${{ github.ref_name }})*: PHP-${{ matrix.php-versions }}: Validate Composer ${{ job.status }}\nURL: ${{ github.event.pull_request.html_url || format('https://github.com/{0}/commit/{1}', github.repository, github.sha) }}\nWorkflow Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "*${{ github.repository }} (${{ github.ref_name }})*: PHP-${{ matrix.php-versions }}: Validate Composer ${{ job.status }}\nURL: ${{ github.event.pull_request.html_url || format('https://github.com/{0}/commit/{1}', github.repository, github.sha) }}\nWorkflow Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

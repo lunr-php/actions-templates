@@ -36,7 +36,22 @@ on:
 permissions: {}
 
 jobs:
+
+  validate-composer:
+    uses: ./.github/workflows/php-validate-composer.yml
+    permissions:
+      contents: read
+    secrets:
+      COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    with:
+      php-extensions: ${{ inputs.php-extensions }}
+      minimum-php-version: ${{ inputs.minimum-php-version }}
+      stable-php-versions: ${{ inputs.stable-php-versions }}
+      experimental-php-versions: ${{ inputs.experimental-php-versions }}
+
   phpunit:
+    needs: [ validate-composer ]
     uses: ./.github/workflows/phpunit.yml
     permissions:
       contents: read
@@ -52,6 +67,7 @@ jobs:
       experimental-php-versions: ${{ inputs.experimental-php-versions }}
 
   coding-standard:
+    needs: [ validate-composer ]
     uses: ./.github/workflows/php-coding-standard.yml
     permissions:
       contents: read
@@ -64,6 +80,7 @@ jobs:
       php-extensions: ${{ inputs.php-extensions }}
 
   phpstan:
+    needs: [ validate-composer ]
     uses: ./.github/workflows/phpstan.yml
     permissions:
       contents: read

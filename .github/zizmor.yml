@@ -10,6 +10,9 @@ rules:
       - php-coding-standard.yml:182:30
       - php-coding-standard.yml:194:34
       - php-coding-standard.yml:197:24
+      - php-validate-composer.yml:107:30
+      - php-validate-composer.yml:112:34
+      - php-validate-composer.yml:115:24
       - phpstan.yml:61:30
       - phpstan.yml:69:34
       - phpstan.yml:72:24
