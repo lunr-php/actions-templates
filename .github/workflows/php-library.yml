@@ -40,6 +40,9 @@ jobs:
     uses: ./.github/workflows/phpunit.yml
     permissions:
       contents: read
+      issues: read
+      checks: write
+      pull-requests: write
     secrets:
       COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
